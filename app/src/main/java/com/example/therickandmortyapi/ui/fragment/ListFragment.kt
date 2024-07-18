@@ -1,4 +1,4 @@
-package com.example.therickandmortyapi
+package com.example.therickandmortyapi.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -36,5 +36,9 @@ class ListFragment : Fragment() {
         viewModel.characters.observe(viewLifecycleOwner) { characters ->
             binding.recyclerView.adapter = CharacterAdapter(characters)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 }

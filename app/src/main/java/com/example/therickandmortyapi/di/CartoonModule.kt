@@ -16,6 +16,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object CartoonModule {
 
+    private const val TIMEOUT_DURATION = 10L
+
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
@@ -25,20 +27,26 @@ object CartoonModule {
             .client(okHttpClient)
             .build()
 
-    @Provides
+
     @Singleton
-    fun provideRickAndMortyApi(retrofit: Retrofit): CartoonApiService =
+    @Provides
+    fun provideApiService(retrofit: Retrofit): CartoonApiService =
         retrofit.create(CartoonApiService::class.java)
 
-    @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient =
+    @Provides
+    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient.Builder()
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            .readTimeout(TIMEOUT_DURATION, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT_DURATION, TimeUnit.SECONDS)
+            .connectTimeout(TIMEOUT_DURATION, TimeUnit.SECONDS)
+            .addInterceptor(interceptor)
             .build()
+
+    @Singleton
+    @Provides
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.therickandmortyapi.data.model.Result
 import com.example.therickandmortyapi.mvvm.CartoonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,13 +22,9 @@ class CartoonViewModel @Inject constructor(
     }
 
     private fun fetchCharacters() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = repository.getAllCharacters()
-                _characters.postValue(response.results)
-            } catch (e: Exception) {
-                // Handle the error
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getAllCharacters()
+            _characters.postValue(response.results)
         }
     }
 }

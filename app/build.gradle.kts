@@ -35,13 +35,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -52,20 +51,17 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    //Dagger-Hilt
+    // Dagger-Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    //OkHttp
+    // OkHttp
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
-    //ViewModel
+    // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v283)
     implementation(libs.androidx.lifecycle.livedata.ktx.v283)
-    //Glide
-
-    implementation (libs.glide)
-    kapt (libs.compiler)
-    //glide
-    implementation (libs.glide)
-    annotationProcessor (libs.compiler)
+    // Glide
+    implementation(libs.glide)
+    kapt(libs.compiler)
+    annotationProcessor(libs.compiler)
 }
