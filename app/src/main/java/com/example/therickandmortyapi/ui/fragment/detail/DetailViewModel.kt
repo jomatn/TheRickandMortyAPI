@@ -1,4 +1,4 @@
-package com.example.therickandmortyapi.ui.fragment.detail
+package com.example.therickandmortyapi.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,21 +16,19 @@ class DetailViewModel @Inject constructor(
     private val repository: CartoonRepository
 ) : ViewModel() {
 
-    private val _characterDetails = MutableLiveData<Resource<Result>>()
-    val characterDetails: LiveData<Resource<Result>> get() = _characterDetails
+    private val _characterDetails = MutableLiveData<Result?>()
+    val characterDetails: LiveData<Result?> = _characterDetails
 
-    private var characterId: Int? = null
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
 
-    fun setCharacterId(id: Int) {
-        characterId = id
-        fetchCharacterDetails()
-    }
-
-    private fun fetchCharacterDetails() {
-        characterId?.let { id ->
-            viewModelScope.launch {
-                repository.getCharacterById(id).observeForever { resource ->
-                    _characterDetails.postValue(resource)
+    fun setCharacterId(characterId: Int) {
+        viewModelScope.launch {
+            repository.getCharacterById(characterId).observeForever { resource ->
+                when (resource) {
+                    is Resource.Success -> _characterDetails.postValue(resource.data)
+                    is Resource.Error -> _error.postValue(resource.message)
+                    else -> Unit
                 }
             }
         }

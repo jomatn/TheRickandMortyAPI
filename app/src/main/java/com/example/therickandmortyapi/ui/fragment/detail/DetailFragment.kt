@@ -12,13 +12,16 @@ import com.bumptech.glide.Glide
 import com.example.therickandmortyapi.R
 import com.example.therickandmortyapi.data.model.Result
 import com.example.therickandmortyapi.databinding.FragmentDetailBinding
+import androidx.navigation.fragment.navArgs
+import com.example.therickandmortyapi.ui.viewmodel.DetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 import java.util.Locale
 
-
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
+
+    private val args: DetailFragmentArgs by navArgs()
 
     private val binding by lazy {
         FragmentDetailBinding.inflate(layoutInflater)
@@ -38,7 +41,7 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val characterId = arguments?.getInt("characterId") ?: return
+        val characterId = args.characterId
         viewModel.setCharacterId(characterId)
 
         viewModel.characterDetails.observe(viewLifecycleOwner) { character ->
@@ -67,17 +70,10 @@ class DetailFragment : Fragment() {
         Glide.with(root.context)
             .load(character.image)
             .placeholder(R.drawable.ic_launcher_background)
-            .into(binding.imgDetail)
-
-        val circleDrawable = when (character.status) {
-            "Alive" -> R.drawable.alive_dot
-            "Dead" -> R.drawable.dead_dot
-            else -> R.drawable.unknown_dot
-        }
-        imgCircle.setImageResource(circleDrawable)
     }
-
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
 }
+
